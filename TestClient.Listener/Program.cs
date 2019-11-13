@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 
 namespace TestClient.Listener
 {
-    public class Class1
+    public class Program
     {
         static void Main(string[] args)
         {
@@ -20,7 +20,7 @@ namespace TestClient.Listener
                 .WithAutomaticReconnect()
                 .Build();
 
-            connection.On<string>("ChessUpdate", msg =>
+            connection.On<string>("BoardUpdate", msg =>
             {
                 Console.WriteLine($"Received message from hub: {msg}");
             });

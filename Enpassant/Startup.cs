@@ -18,6 +18,11 @@ namespace Enpassant
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSignalR();
+            
+            services.Configure<IISServerOptions>(options => 
+            {
+                options.AutomaticAuthentication = false;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,7 +49,7 @@ namespace Enpassant
         {
             Console.WriteLine("Sending message to SignalR clients...");
             var hubContext = context.RequestServices.GetRequiredService<IHubContext<ChessEventsHub, IChessEventsClient>>();
-            await hubContext.Clients.All.ChessUpdate("Howdy! (•ω•)");
+            await hubContext.Clients.All.BoardUpdate("Howdy! (•ω•)");
         }
     }
 }

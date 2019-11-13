@@ -13,15 +13,32 @@ namespace Enpassant
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var isDev = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
+            if (isDev)
+            {
+                CreateHostBuilderDev(args).Build().Run();
+            }
+            else
+            {
+                CreateHostBuilder(args).Build().Run();
+            }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
+        public static IHostBuilder CreateHostBuilderDev(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder
                         .UseKestrel()
+                        .UseStartup<Startup>();
+                });
+        
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder
+                        .UseIISIntegration()
                         .UseStartup<Startup>();
                 });
     }

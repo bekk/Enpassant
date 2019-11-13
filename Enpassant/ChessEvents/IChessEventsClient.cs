@@ -4,6 +4,6 @@ namespace Enpassant.ChessEvents
 {
     public interface IChessEventsClient
     {
-        Task ChessUpdate(string updatePayload);
+        Task BoardUpdate(string updatePayload);
     }
 }
