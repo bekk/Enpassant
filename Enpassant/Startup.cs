@@ -1,7 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Enpassant.ChessEvents;
+using Enpassant.Ingestion;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -33,16 +33,18 @@ namespace Enpassant
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Hello World!"); });
-                endpoints.MapGet("/test", SendTestMessageToClients);
-                endpoints.MapHub<ChessHub>("/chess");
+                
+                endpoints.MapGet("/testClients", SendTestMessageToClients);
+                endpoints.MapHub<IngestionHub>("/ingestion");
+                endpoints.MapHub<ChessEventsHub>("/chessEvents");
             });
         }
 
-        public static async Task SendTestMessageToClients(HttpContext context)
+        private static async Task SendTestMessageToClients(HttpContext context)
         {
             Console.WriteLine("Sending message to SignalR clients...");
-            var hubContext = context.RequestServices.GetRequiredService<IHubContext<ChessHub, ITypedHubClient>>();
-            await hubContext.Clients.All.MsgFromHub("Howdy! Do you like fianchetto?");
+            var hubContext = context.RequestServices.GetRequiredService<IHubContext<ChessEventsHub, IChessEventsClient>>();
+            await hubContext.Clients.All.ChessUpdate("Howdy! (•ω•)");
         }
     }
 }

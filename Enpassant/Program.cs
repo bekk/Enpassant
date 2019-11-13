@@ -20,7 +20,6 @@ namespace Enpassant
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    // TODO: Configure for web deployment
                     webBuilder
                         .UseKestrel()
                         .UseStartup<Startup>();

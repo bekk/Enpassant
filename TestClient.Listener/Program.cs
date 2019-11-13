@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 
-namespace Enpassant.TestClient
+namespace TestClient.Listener
 {
-    class Program
+    public class Class1
     {
         static void Main(string[] args)
         {
@@ -16,11 +16,11 @@ namespace Enpassant.TestClient
             Console.WriteLine("Started test client...");
             
             var connection = new HubConnectionBuilder()
-                .WithUrl("https://localhost:5001/chess")
+                .WithUrl("https://localhost:5001/chessEvents")
                 .WithAutomaticReconnect()
                 .Build();
 
-            connection.On<string>("MsgFromHub", msg =>
+            connection.On<string>("ChessUpdate", msg =>
             {
                 Console.WriteLine($"Received message from hub: {msg}");
             });
@@ -31,14 +31,7 @@ namespace Enpassant.TestClient
                 await connection.StartAsync();
                 Console.WriteLine("Connection started successfully");
                 
-                // SendAsync just pushes the message, does not wait for an "ACK" from the server
-                await connection.SendAsync("Update", "Did you get this update?");
-                // InvokeAsync waits for an "ACK" from the server, and can also return a value
-                var response = await connection.InvokeAsync<string>("UpdateWithEcho", "Hello");
-                Console.WriteLine($"Got a response: {response}");
-                
                 Console.WriteLine("Starting passive loop. Type \"exit\" to quit");
-
                 while (true)
                 {
                     var input = Console.ReadLine();
