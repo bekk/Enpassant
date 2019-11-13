@@ -1,5 +1,5 @@
 # Enpassant
-Ingests chess games sent from DGT board and does something with it. SignalR is used for communication. Enpassant will receive messages from a client that is running the following code:
+Ingests chess games sent from a DGT board and does something with it. SignalR is used for communication. Enpassant will receive messages from a client that is running the following code:
 https://github.com/emilmork/dgt-chessboard-bluetooth
 
 ## How to connect to Enpassant hub
