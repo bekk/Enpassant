@@ -2,6 +2,8 @@
 Ingests chess board state sent from a DGT board and forwards it to clients listening for updates. SignalR is used for communication. Enpassant will receive messages from a client that is running the following code:
 https://github.com/emilmork/dgt-chessboard-bluetooth
 
+**This app is hosted here:** https://enpassanthub.azurewebsites.net/
+
 ## Hubs
 The app exposes two hubs:
 
