@@ -7,6 +7,9 @@ namespace TestClient.Board
     // Use this to test that the ingestion hub receives messages
     class Program
     {
+        private const string HubUrl = "http://localhost:5000/ingestion";
+        // private const string HubUrl = "https://enpassanthub.azurewebsites.net/ingestion";
+        
         static void Main(string[] args)
         {
             MainAsync(args).GetAwaiter().GetResult();
@@ -17,7 +20,7 @@ namespace TestClient.Board
             Console.WriteLine("Started test client...");
             
             var connection = new HubConnectionBuilder()
-                .WithUrl("https://localhost:5001/ingestion")
+                .WithUrl(HubUrl)
                 .WithAutomaticReconnect()
                 .Build();
 

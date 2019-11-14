@@ -6,6 +6,9 @@ namespace TestClient.Listener
 {
     public class Program
     {
+        private const string HubUrl = "http://localhost:5000/chessEvents";
+        // private const string HubUrl = "https://enpassanthub.azurewebsites.net/chessEvents";
+        
         static void Main(string[] args)
         {
             MainAsync(args).GetAwaiter().GetResult();
@@ -16,7 +19,7 @@ namespace TestClient.Listener
             Console.WriteLine("Started test client...");
             
             var connection = new HubConnectionBuilder()
-                .WithUrl("https://localhost:5001/chessEvents")
+                .WithUrl(HubUrl)
                 .WithAutomaticReconnect()
                 .Build();
 

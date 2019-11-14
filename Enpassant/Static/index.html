@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enpassant</title>
+    <style>
+        body {
+            width: 100%;
+            background-color: #141414;
+            color: #eeeeee;
+            font-family: Arial, sans-serif;;
+        }
+        
+        #wrapper {
+            width: 1000px;
+            margin: 0 auto;
+        }
+        
+        #chessEvents {
+            font-family: monospace;
+            color: #ff008f;
+            min-height: 300px;
+            border: 2px solid #00ff75;
+            padding: 0.5rem 1rem;
+        }
+    </style>
+</head>
+<body>
+<div id="wrapper">
+    <h1>Enpassant</h1>
+    <p>For information on how to use me, go <a href="https://github.com/bekk/Enpassant" target="_blank" rel="noopener noreferrer">here.</a></p>
+    <section>
+        <h2>Chess event stream</h2>
+        <div id="chessEvents"></div>
+    </section>
+</div>
+
+<script src="/signalr.min.js"></script>
+<script>
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/chessEvents")
+        .withAutomaticReconnect()
+        .build();
+
+    connection.on("BoardUpdate", payload => {
+        let today = new Date();
+        let time = `[${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}]`;
+        let timestampedPayload = `${time} ${payload}`;
+        
+        const chessEventsDiv = document.getElementById("chessEvents");
+        let newDiv = document.createElement('div');
+        newDiv.innerText = timestampedPayload;
+        chessEventsDiv.appendChild(newDiv);
+    });
+
+    connection.start().then(function () {
+        console.log("Connected to chess events hub");
+    });
+</script>
+</body>
+</html>

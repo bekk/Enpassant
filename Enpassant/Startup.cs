@@ -37,7 +37,8 @@ namespace Enpassant
             
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Hello World!"); });
+                endpoints.MapGet("/", Frontpage.WriteIndexHtml);
+                endpoints.MapGet("/signalr.min.js", Frontpage.WriteSignalRJs);
                 
                 endpoints.MapGet("/testClients", SendTestMessageToClients);
                 endpoints.MapHub<IngestionHub>("/ingestion");
