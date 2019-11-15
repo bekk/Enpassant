@@ -39,18 +39,12 @@ namespace Enpassant
             {
                 endpoints.MapGet("/", Frontpage.WriteIndexHtml);
                 endpoints.MapGet("/signalr.min.js", Frontpage.WriteSignalRJs);
+                endpoints.MapGet("/favicon.ico", Frontpage.WriteFavicon);
                 
-                endpoints.MapGet("/testClients", SendTestMessageToClients);
+                endpoints.MapGet("/sendTestEvent", Frontpage.SendTestEvent);
                 endpoints.MapHub<IngestionHub>("/ingestion");
                 endpoints.MapHub<ChessEventsHub>("/chessEvents");
             });
-        }
-
-        private static async Task SendTestMessageToClients(HttpContext context)
-        {
-            Console.WriteLine("Sending message to SignalR clients...");
-            var hubContext = context.RequestServices.GetRequiredService<IHubContext<ChessEventsHub, IChessEventsClient>>();
-            await hubContext.Clients.All.BoardUpdate("Howdy! (•ω•)");
         }
     }
 }
