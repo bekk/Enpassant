@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enpassant test client</title>
+</head>
+<body>
+<div id="wrapper">
+        <h2>Chess event stream</h2>
+        <div id="chessEvents"></div>
+    </section>
+</div>
+
+<script src="/signalr.min.js"></script>
+<script>
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("https://enpassanthub.azurewebsites.net/chessEvents")
+        .withAutomaticReconnect()
+        .build();
+
+    connection.on("BoardUpdate", payload => {
+        let today = new Date();
+        let time = `[${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}]`;
+        let timestampedPayload = `${time} ${payload}`;
+        
+        const chessEventsDiv = document.getElementById("chessEvents");
+        let newDiv = document.createElement('div');
+        newDiv.innerText = timestampedPayload;
+        chessEventsDiv.appendChild(newDiv);
+    });
+
+    connection.start({ withCredentials: false }).then(function () {
+        console.log("Connected to chess events hub");
+    });
+</script>
+</body>
+</html>

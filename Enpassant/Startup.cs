@@ -36,9 +36,11 @@ namespace Enpassant
             
             app.UseCors(builder =>
             {
-                builder.AllowAnyOrigin()
+                builder
                     .AllowAnyMethod()
-                    .AllowAnyHeader();
+                    .AllowAnyHeader()
+                    .SetIsOriginAllowed(_ => true)
+                    .AllowCredentials();
             });
 
             app.UseRouting();
