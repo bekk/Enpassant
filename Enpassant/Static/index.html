@@ -19,9 +19,10 @@
         #chessEvents {
             font-family: monospace;
             color: #ff008f;
-            min-height: 300px;
+            height: 500px;
             border: 2px solid #00ff75;
             padding: 0.5rem 1rem;
+            overflow-y: auto;
         }
         
         #chessEvents div {
@@ -33,7 +34,7 @@
 <div id="wrapper">
     <h1>Enpassant</h1>
     <p>For information on how to use me, go <a href="https://github.com/bekk/Enpassant" target="_blank" rel="noopener noreferrer">here.</a></p>
-    <p>To send a test event to clients, click <a href="/sendTestEvent" target="_blank" rel="noopener noreferrer">here.</a></p>
+    <p>To send a test event to clients, click <button onclick="sendTestEvents()">here</button>
     <section>
         <h2>Chess event stream</h2>
         <div id="chessEvents"></div>
@@ -42,6 +43,16 @@
 
 <script src="/signalr.min.js"></script>
 <script>
+    function pad(num, size) {
+        var s = num + "";
+        while (s.length < size) {
+            s = "0" + s;
+        }
+        return s;
+    }
+    
+    ////// Board listener ////// 
+    
     const connection = new signalR.HubConnectionBuilder()
         .withUrl("/chessEvents")
         .withAutomaticReconnect()
@@ -49,18 +60,85 @@
 
     connection.on("BoardUpdate", payload => {
         let today = new Date();
-        let time = `[${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}]`;
+        let hours = pad(today.getHours(), 2);
+        let minutes = pad(today.getMinutes(), 2);
+        let seconds = pad(today.getMinutes(), 2);
+        let time = `[${hours}:${minutes}:${seconds}]`;
         let timestampedPayload = `${time} ${payload}`;
         
         const chessEventsDiv = document.getElementById("chessEvents");
         let newDiv = document.createElement('div');
         newDiv.innerText = timestampedPayload;
         chessEventsDiv.appendChild(newDiv);
+        
+        chessEventsDiv.scrollTop = chessEventsDiv.scrollHeight;
     });
 
     connection.start().then(function () {
         console.log("Connected to chess events hub");
     });
+
+    ////// Board state pusher (for testing) ////// 
+    
+    let kasparovsImmortalStart = "1. e4";
+    let kasparovsImmortalRest = "d6 2. d4 Nf6 3. Nc3 g6 4. Be3 Bg7 5. Qd2 c6 6. f3 b5 7. Nge2 Nbd7 8. Bh6 Bxh6 9. Qxh6 Bb7 10. a3 e5 11. O-O-O Qe7 12. Kb1 a6 13. Nc1 O-O-O 14. Nb3 exd4 15. Rxd4 c5 16. Rd1 Nb6 17. g3 Kb8 18. Na5 Ba8 19. Bh3 d5 20. Qf4+ Ka7 21. Rhe1 d4 22. Nd5 Nbxd5 23. exd5 Qd6 24. Rxd4 cxd4 25. Re7+ Kb6 26. Qxd4+ Kxa5 27. b4+ Ka4 28. Qc3 Qxd5 29. Ra7 Bb7 30. Rxb7 Qc4 31. Qxf6 Kxa3 32. Qxa6+ Kxb4 33. c3+ Kxc3 34. Qa1+ Kd2 35. Qb2+ Kd1 36. Bf1 Rd2 37. Rd7 Rxd7 38. Bxc4 bxc4 39. Qxh8 Rd3 40. Qa8 c3 41. Qa4+ Ke1 42. f4 f5 43. Kc1 Rd2 44. Qa7 1-0";
+    
+    window.currentState = [kasparovsImmortalStart, kasparovsImmortalRest];
+    
+    // Don't look at this ugly code
+    function advancePgn(pgnUntilNow, remainingPgn) {
+        if (pgnUntilNow === "") {
+            let newPgn = pgnUntilNow.split(" ").slice(0, 2).join(" ");
+            let newRemainingPgn = remainingPgn.substring(newPgn.length - pgnUntilNow.length);
+            return [newPgn, newRemainingPgn];
+        }
+        else if (remainingPgn === "") {
+            return [pgnUntilNow, ""];
+        }
+        else {
+            let parts = remainingPgn.split(".");
+            let moveNumber = parseInt(parts[0]);
+            
+            console.log("movenumber", moveNumber);
+            
+            if (isNaN(moveNumber)) {
+                let ply = parts[0].split(" ")[0];
+                console.log("ply", ply);
+                let newPgn = pgnUntilNow + " " + ply;
+                console.log("newPgn", newPgn);
+                let newRemainingPgn = remainingPgn.substring(newPgn.length - pgnUntilNow.length);
+                console.log("newRemainingPgn", newRemainingPgn);
+                return [newPgn, newRemainingPgn];
+            } else {
+                let newMove = parts[1].trim().split(" ")[0];
+                console.log("newMove", newMove);
+                let newPgn = pgnUntilNow + " " + moveNumber + ". " + newMove;
+                console.log("newPgn", newPgn);
+                let newRemainingPgn = remainingPgn.substring(newPgn.length - pgnUntilNow.length);
+                console.log("newRemainingPgn", newRemainingPgn);
+                return [newPgn, newRemainingPgn];
+            }
+        }
+    }
+    
+    function sendTestEvents() {
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/ingestion")
+            .withAutomaticReconnect()
+            .build();
+
+        connection.start().then(function () {
+            console.log("Sending test events");
+            
+            var testdata = window.currentState[0];
+            var testdataString = JSON.stringify({ pgn: testdata });
+            connection.invoke("BoardUpdate", testdataString);
+            
+            window.currentState = advancePgn(window.currentState[0], window.currentState[1]);
+            
+            console.log("new currentState", window.currentState);
+        });
+    }
 </script>
 </body>
 </html>
