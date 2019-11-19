@@ -58,7 +58,7 @@
         .withAutomaticReconnect()
         .build();
 
-    connection.on("BoardUpdate", payload => {
+    connection.on("NewBoardState", payload => {
         let today = new Date();
         let hours = pad(today.getHours(), 2);
         let minutes = pad(today.getMinutes(), 2);
@@ -114,22 +114,15 @@
     }
     
     function sendTestEvents() {
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl("/ingestion")
-            .withAutomaticReconnect()
-            .build();
-
-        connection.start().then(function () {
-            console.log("Sending test events");
-            
-            var testdata = window.currentState[0];
-            var testdataString = JSON.stringify({ pgn: testdata });
-            connection.invoke("BoardUpdate", testdataString);
-            
-            window.currentState = advancePgn(window.currentState[0], window.currentState[1]);
-            
-            console.log("new currentState", window.currentState);
-        });
+        console.log("Sending test events");
+        
+        var testdata = window.currentState[0];
+        var testdataString = JSON.stringify({ pgn: testdata });
+        connection.invoke("PushBoardState", testdataString);
+        
+        window.currentState = advancePgn(window.currentState[0], window.currentState[1]);
+        
+        console.log("new currentState", window.currentState);
     }
 </script>
 </body>

@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
 
-namespace Enpassant.Ingestion
+namespace Enpassant.ChessEvents
 {
-    public static class IngestionHubState
+    public static class ChessEventsState
     {
         public static string LastPayload { get; set; } = JsonSerializer.Serialize(new {pgn = ""});
     }

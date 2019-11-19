@@ -1,15 +1,19 @@
-﻿using System.Threading.Tasks;
-using Enpassant.Ingestion;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 
 namespace Enpassant.ChessEvents
 {
     // The ChessEventsHub updates all clients (listeners) about new board states
     public class ChessEventsHub : Hub<IChessEventsClient>
     {
+        public void PushBoardState(string updatePayload)
+        {
+            ChessEventsState.LastPayload = updatePayload;
+            Clients.All.NewBoardState(updatePayload);
+        }
+        
         public string LastUpdate()
         {
-            return IngestionHubState.LastPayload;
+            return ChessEventsState.LastPayload;
         }
     }
 }

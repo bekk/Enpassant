@@ -40,7 +40,7 @@ namespace Enpassant
             var payload = JsonSerializer.Serialize(payloadObject);
             
             var hubContext = context.RequestServices.GetRequiredService<IHubContext<ChessEventsHub, IChessEventsClient>>();
-            await hubContext.Clients.All.BoardUpdate(payload);
+            await hubContext.Clients.All.NewBoardState(payload);
         }
         
         public static async Task WriteFavicon(HttpContext context)

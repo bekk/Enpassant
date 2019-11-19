@@ -1,11 +1,6 @@
-using System;
-using System.Threading.Tasks;
 using Enpassant.ChessEvents;
-using Enpassant.Ingestion;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -52,7 +47,6 @@ namespace Enpassant
                 endpoints.MapGet("/favicon.ico", Frontpage.WriteFavicon);
                 
                 endpoints.MapGet("/sendTestEvent", Frontpage.SendTestEvent);
-                endpoints.MapHub<IngestionHub>("/ingestion");
                 endpoints.MapHub<ChessEventsHub>("/chessEvents");
             });
         }

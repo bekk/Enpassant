@@ -5,11 +5,14 @@ https://github.com/emilmork/dgt-chessboard-bluetooth
 **This app is hosted here:** https://enpassanthub.azurewebsites.net/
 
 ## Hubs
-The app exposes two hubs:
+**Note:** Breaking changes!
+The app exposes a single hub. Connect to `{baseUrl}/chessEvents`.
 
-`{baseUrl}/ingestion` is used to push board states. Clients using this hub should send messages titled `BoardUpdate`.
+This hub supports three messages:
 
-`{baseUrl}/chessEvents` is used to listen to board states. Clients using this hub should listen for messages titled `BoardUpdate`. Clients may also invoke `LastUpdate` to get the last board state.
+- To push new board state, send messages titled `PushBoardState`.
+- To listen for new board state, listen for messages titled `NewBoardState`.
+- To get the last known board state, invoke `LastUpdate`. Enpassant will respond with the last update.
 
 ## How to connect to Enpassant hub
 
