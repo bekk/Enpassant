@@ -99,23 +99,15 @@
             let parts = remainingPgn.split(".");
             let moveNumber = parseInt(parts[0]);
             
-            console.log("movenumber", moveNumber);
-            
             if (isNaN(moveNumber)) {
                 let ply = parts[0].split(" ")[0];
-                console.log("ply", ply);
                 let newPgn = pgnUntilNow + " " + ply;
-                console.log("newPgn", newPgn);
                 let newRemainingPgn = remainingPgn.substring(newPgn.length - pgnUntilNow.length);
-                console.log("newRemainingPgn", newRemainingPgn);
                 return [newPgn, newRemainingPgn];
             } else {
                 let newMove = parts[1].trim().split(" ")[0];
-                console.log("newMove", newMove);
                 let newPgn = pgnUntilNow + " " + moveNumber + ". " + newMove;
-                console.log("newPgn", newPgn);
                 let newRemainingPgn = remainingPgn.substring(newPgn.length - pgnUntilNow.length);
-                console.log("newRemainingPgn", newRemainingPgn);
                 return [newPgn, newRemainingPgn];
             }
         }
