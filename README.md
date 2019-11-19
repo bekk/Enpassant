@@ -9,7 +9,7 @@ The app exposes two hubs:
 
 `{baseUrl}/ingestion` is used to push board states. Clients using this hub should send messages titled `BoardUpdate`.
 
-`{baseUrl}/chessEvents` is used to listen to board states. Clients using this hub should listen for messages titled `BoardUpdate`.
+`{baseUrl}/chessEvents` is used to listen to board states. Clients using this hub should listen for messages titled `BoardUpdate`. Clients may also invoke `LastUpdate` to get the last board state.
 
 ## How to connect to Enpassant hub
 

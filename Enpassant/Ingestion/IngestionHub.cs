@@ -17,6 +17,7 @@ namespace Enpassant.Ingestion
         
         public void BoardUpdate(string updatePayload)
         {
+            IngestionHubState.LastPayload = updatePayload;
             _chessEventsContext.Clients.All.BoardUpdate(updatePayload);
         }
     }
