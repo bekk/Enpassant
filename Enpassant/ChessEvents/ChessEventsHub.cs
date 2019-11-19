@@ -11,7 +11,7 @@ namespace Enpassant.ChessEvents
             Clients.All.NewBoardState(updatePayload);
         }
         
-        public string LastUpdate()
+        public string LastBoardState()
         {
             return ChessEventsState.LastPayload;
         }

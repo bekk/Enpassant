@@ -12,7 +12,7 @@ This hub supports three messages:
 
 - To push new board state, send messages titled `PushBoardState`.
 - To listen for new board state, listen for messages titled `NewBoardState`.
-- To get the last known board state, invoke `LastUpdate`. Enpassant will respond with the last update.
+- To get the last known board state, invoke `LastBoardState`. Enpassant will respond with the last update.
 
 ## How to connect to Enpassant hub
 
