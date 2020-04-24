@@ -18,3 +18,4 @@ This hub supports three messages:
 
 Read the following documentation for information on how to use SignalR from JavaScript:
 https://docs.microsoft.com/en-us/aspnet/core/signalr/javascript-client?view=aspnetcore-3.0
+
